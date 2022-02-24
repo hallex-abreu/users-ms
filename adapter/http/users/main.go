@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/hallex-abreu/users-ms/adapter/http/dtos"
+	"github.com/hallex-abreu/users-ms/adapter/http/users/dtos"
 	"github.com/hallex-abreu/users-ms/database"
 	"github.com/hallex-abreu/users-ms/entities"
 )
