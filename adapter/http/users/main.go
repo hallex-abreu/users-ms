@@ -7,6 +7,7 @@ import (
 	"github.com/hallex-abreu/users-ms/adapter/http/users/dtos"
 	"github.com/hallex-abreu/users-ms/database"
 	"github.com/hallex-abreu/users-ms/entities"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func Index(c *gin.Context) {
@@ -23,10 +24,18 @@ func Store(c *gin.Context) {
 		return
 	}
 
-	user := entities.Users{
-		Name:  body.Name,
-		Email: body.Email,
+	hashPassword, err := bcrypt.GenerateFromPassword([]byte(body.Password), bcrypt.DefaultCost)
+
+	if err != nil {
+		panic(err)
 	}
+
+	user := entities.Users{
+		Name:     body.Name,
+		Email:    body.Email,
+		Password: string(hashPassword),
+	}
+
 	database.DB.Create(&user)
 
 	c.JSON(http.StatusOK, gin.H{"data": user})
