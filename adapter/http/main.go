@@ -16,6 +16,7 @@ func Init() {
 
 	router.GET("/health", actuator.Health)
 	router.GET("/users", users.Index)
+	router.GET("/users/:id", users.Show)
 	router.POST("/users", users.Store)
 	router.POST("/login", authentication.Login)
 	router.POST("/recover-password", authentication.RecoverPassword)
