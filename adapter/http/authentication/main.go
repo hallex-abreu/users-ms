@@ -8,6 +8,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/hallex-abreu/users-ms/adapter/http/authentication/dtos"
+	"github.com/hallex-abreu/users-ms/adapter/mail"
 	"github.com/hallex-abreu/users-ms/database"
 	"github.com/hallex-abreu/users-ms/entities"
 	"golang.org/x/crypto/bcrypt"
@@ -40,6 +41,37 @@ func Login(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, err.Error())
 	}
 	c.JSON(http.StatusOK, token)
+}
+
+func RecoverPassword(c *gin.Context) {
+	var body dtos.UserDTO
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var user entities.Users
+	result := database.DB.Where("email = ?", body.Email).Find(&user)
+
+	if result.RowsAffected == 0 {
+		c.JSON(http.StatusNotFound, gin.H{"error": "No user with this email."})
+		return
+	}
+
+	token, err := bcrypt.GenerateFromPassword([]byte(user.Email), bcrypt.DefaultCost)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Error generate token."})
+		return
+	}
+
+	user.PasswordResetToken = string(token)
+	user.PasswordResetExpires = time.Now().Add(time.Hour * 1).Unix()
+
+	database.DB.Save(&user)
+
+	mail.Send(user.Name, user.Email, string(token))
+
+	c.JSON(http.StatusOK, gin.H{"message": "Enviado com sucesso! Verifique sua caixa de email."})
 }
 
 func CreateToken(userid int16) (string, error) {
