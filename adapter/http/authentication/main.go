@@ -71,7 +71,42 @@ func RecoverPassword(c *gin.Context) {
 
 	mail.Send(user.Name, user.Email, string(token))
 
-	c.JSON(http.StatusOK, gin.H{"message": "Enviado com sucesso! Verifique sua caixa de email."})
+	c.JSON(http.StatusOK, gin.H{"message": "Sent with success! Check your email box."})
+}
+
+func ResetPassword(c *gin.Context) {
+	var body dtos.ResetPasswordDTO
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var user entities.Users
+	result := database.DB.Where("password_reset_token = ?", body.Token).Find(&user)
+
+	if result.RowsAffected == 0 {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Token invalid."})
+		return
+	}
+
+	now := time.Now().Unix()
+
+	if now > user.PasswordResetExpires {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Token expired."})
+		return
+	}
+
+	hashPassword, err := bcrypt.GenerateFromPassword([]byte(body.Password), bcrypt.DefaultCost)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	user.Password = string(hashPassword)
+
+	database.DB.Save(&user)
+
+	c.JSON(http.StatusOK, gin.H{"message": "Password reset successfully."})
 }
 
 func CreateToken(userid int16) (string, error) {
