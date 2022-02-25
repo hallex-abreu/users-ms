@@ -69,7 +69,7 @@ func RecoverPassword(c *gin.Context) {
 
 	database.DB.Save(&user)
 
-	mail.Send(user.Email, string(token))
+	mail.Send(user.Name, user.Email, string(token))
 
 	c.JSON(http.StatusOK, gin.H{"message": "Enviado com sucesso! Verifique sua caixa de email."})
 }
