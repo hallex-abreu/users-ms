@@ -19,6 +19,7 @@ func Init() {
 	router.POST("/users", users.Store)
 	router.POST("/login", authentication.Login)
 	router.POST("/recover-password", authentication.RecoverPassword)
+	router.POST("/reset-password", authentication.ResetPassword)
 
 	database.Connection()
 
