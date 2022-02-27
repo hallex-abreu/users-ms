@@ -14,12 +14,11 @@ import (
 
 func Init() {
 	router := gin.Default()
-	router.Use(middleware.Authorization)
 
 	router.GET("/health", actuator.Health)
-	router.GET("/users", users.Index)
-	router.GET("/users/:id", users.Show)
-	router.POST("/users", users.Store)
+	router.GET("/users", middleware.Authorization, users.Index)
+	router.GET("/users/:id", middleware.Authorization, users.Show)
+	router.POST("/users", middleware.Authorization, users.Store)
 	router.POST("/login", authentication.Login)
 	router.POST("/recover-password", authentication.RecoverPassword)
 	router.POST("/reset-password", authentication.ResetPassword)
