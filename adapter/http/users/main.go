@@ -39,6 +39,7 @@ func Index(c *gin.Context) {
 }
 
 func Show(c *gin.Context) {
+
 	id := c.Params.ByName("id")
 
 	var user entities.Users
