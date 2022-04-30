@@ -40,7 +40,9 @@ func Login(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusUnprocessableEntity, err.Error())
 	}
-	c.JSON(http.StatusOK, token)
+	c.JSON(http.StatusOK, gin.H{
+		"token": token,
+	})
 }
 
 func RecoverPassword(c *gin.Context) {

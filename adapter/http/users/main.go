@@ -14,7 +14,7 @@ import (
 
 func Index(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
-	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "3"))
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
 	filter := c.DefaultQuery("filter", "")
 
 	var users []entities.Users

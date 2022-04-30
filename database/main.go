@@ -2,15 +2,21 @@ package database
 
 import (
 	"github.com/hallex-abreu/users-ms/entities"
-	"gorm.io/driver/postgres"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
+
+const DB_USERNAME = "user"
+const DB_PASSWORD = "user"
+const DB_NAME = "userclientes"
+const DB_HOST = "127.0.0.1"
+const DB_PORT = "3306"
 
 var DB *gorm.DB
 
 func Connection() {
-	dns := "host=localhost user=docker password=docker dbname=usersdb port=5432 sslmode=disable TimeZone=America/Sao_Paulo"
-	db, err := gorm.Open(postgres.Open(dns), &gorm.Config{})
+	dns := DB_USERNAME + ":" + DB_PASSWORD + "@tcp" + "(" + DB_HOST + ":" + DB_PORT + ")/" + DB_NAME + "?" + "parseTime=true&loc=Local"
+	db, err := gorm.Open(mysql.Open(dns), &gorm.Config{})
 
 	if err != nil {
 		panic("Failed to connect to database!")

@@ -4,6 +4,8 @@ go 1.17
 
 require github.com/gin-gonic/gin v1.7.7
 
+require github.com/go-sql-driver/mysql v1.6.0 // indirect
+
 require (
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.13.0 // indirect
@@ -43,4 +45,7 @@ require (
 	gopkg.in/mail.v2 v2.3.1
 )
 
-require gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
+require (
+	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
+	gorm.io/driver/mysql v1.3.3
+)
