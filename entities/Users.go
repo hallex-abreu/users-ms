@@ -11,4 +11,5 @@ type Users struct {
 	PasswordResetExpires int64     `json:"password_reset_expires" gorm:"default:null"`
 	CreatedAt            time.Time `json:"created_at"`
 	UpdatedAt            time.Time `json:"updated_at"`
+	Roles                []*Roles  `gorm:"many2many:users_roles;"`
 }

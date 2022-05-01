@@ -23,6 +23,10 @@ func Connection() {
 	}
 
 	db.AutoMigrate(&entities.Users{})
+	db.AutoMigrate(&entities.Roles{})
+	db.AutoMigrate(&entities.UsersRoles{})
+	db.AutoMigrate(&entities.Permissions{})
+	db.AutoMigrate(&entities.RolesPermissions{})
 
 	DB = db
 }
